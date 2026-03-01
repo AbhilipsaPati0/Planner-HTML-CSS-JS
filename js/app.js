@@ -4,6 +4,7 @@
    ========================================== */
 
 // ===== STATE =====
+
 let tasks  = JSON.parse(localStorage.getItem('planit_tasks')  || '[]');
 let habits = JSON.parse(localStorage.getItem('planit_habits') || 'null') || [
   { id: 1, title: 'Morning Run',     icon: '🏃', color: 'coral',  streak: 5,  done: [1,2,3,4,5] },
@@ -11,6 +12,7 @@ let habits = JSON.parse(localStorage.getItem('planit_habits') || 'null') || [
   { id: 3, title: 'Meditate',        icon: '🧘', color: 'mint',   streak: 3,  done: [1,2,3] },
   { id: 4, title: 'Drink 8 Glasses', icon: '💧', color: 'amber',  streak: 7,  done: [1,2,3,4,5,6,7] },
 ];
+
 
 const today       = new Date();
 let currentDay    = new Date(today);
@@ -28,6 +30,7 @@ const quotes = [
 ];
 
 // ===== INIT =====
+
 function init() {
   if (tasks.length === 0) {
     const td = formatDate(today);
@@ -50,7 +53,9 @@ function init() {
   updateProgress();
 }
 
+
 // ===== HELPERS =====
+
 function formatDate(d) {
   return d.toISOString().split('T')[0];
 }
@@ -73,6 +78,7 @@ function updateNavDate() {
 }
 
 // ===== VIEW SWITCHING =====
+
 function switchView(view, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
@@ -81,6 +87,7 @@ function switchView(view, btn) {
 }
 
 // ===== TIMELINE =====
+
 function renderTimeline() {
   const tl      = document.getElementById('timeline');
   const dateStr = formatDate(currentDay);
@@ -152,6 +159,7 @@ function updateProgress() {
 }
 
 // ===== MINI CALENDAR =====
+
 function renderMiniCal() {
   const title = calMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   document.getElementById('miniCalTitle').textContent = title;
@@ -186,6 +194,7 @@ function changeMonth(dir) {
 }
 
 // ===== WEEKLY VIEW =====
+
 function renderWeekly() {
   const days = [];
   for (let i = 0; i < 7; i++) {
@@ -199,6 +208,7 @@ function renderWeekly() {
   document.getElementById('weekLabel').textContent = `${startStr} – ${endStr}`;
 
   // Header row
+
   let headerHtml = '<div></div>';
   days.forEach(d => {
     const isToday = formatDate(d) === formatDate(today);
@@ -215,6 +225,7 @@ function renderWeekly() {
   for (let h = 7; h <= 20; h++) hours.push(h);
 
   // Time column
+
   let timeHtml = '';
   hours.forEach(h => {
     const tLabel = h > 12 ? `${h - 12}PM` : h === 12 ? '12PM' : `${h}AM`;
@@ -223,6 +234,7 @@ function renderWeekly() {
   document.getElementById('weekTimeCol').innerHTML = timeHtml;
 
   // Day columns
+
   const body = document.getElementById('weeklyBody');
   body.querySelectorAll('.week-col').forEach(c => c.remove());
 
@@ -251,6 +263,7 @@ function changeWeek(dir) {
 }
 
 // ===== MONTHLY VIEW =====
+
 function renderMonthly() {
   const title = monthView.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
   document.getElementById('monthTitle').textContent = title;
@@ -262,6 +275,7 @@ function renderMonthly() {
   let html = '';
 
   // Previous month padding
+
   for (let i = 0; i < startDay; i++) {
     const d = new Date(first);
     d.setDate(d.getDate() - (startDay - i));
@@ -290,6 +304,7 @@ function changeMonthView(dir) {
 }
 
 // ===== HABITS =====
+
 function renderHabits() {
   const total     = habits.reduce((a, h) => a + h.streak, 0);
   const maxStreak = Math.max(...habits.map(h => h.streak));
@@ -338,6 +353,7 @@ function toggleHabitDay(id, day) {
   else             { h.done.splice(idx, 1); }
 
   // Recalculate streak from today backwards
+
   h.streak = (function() {
     let s = 0;
     for (let i = today.getDate(); i >= 1; i--) {
@@ -362,6 +378,7 @@ function addHabit() {
 }
 
 // ===== MODAL =====
+
 function openModal(time, date) {
   const modal     = document.getElementById('modalOverlay');
   const dateInput = document.getElementById('taskDate');
@@ -415,6 +432,7 @@ function saveTask() {
 }
 
 // ===== MOOD =====
+
 function setMood(el) {
   document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
   el.classList.add('selected');
@@ -422,6 +440,7 @@ function setMood(el) {
 }
 
 // ===== TOAST =====
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -430,8 +449,10 @@ function showToast(msg) {
 }
 
 // ===== LOCAL STORAGE =====
+
 function saveTasks()  { localStorage.setItem('planit_tasks',  JSON.stringify(tasks));  }
 function saveHabits() { localStorage.setItem('planit_habits', JSON.stringify(habits)); }
 
 // ===== BOOTSTRAP =====
+
 init();
