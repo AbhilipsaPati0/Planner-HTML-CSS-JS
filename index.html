@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PLANIT — Your Life, Organized</title>
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== ANIMATED BG ORBS ===== -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+  </div>
+
+  <!-- ===== NAV ===== -->
+  <nav>
+    <div class="logo">PLANIT ✦</div>
+
+    <ul class="nav-tabs">
+      <li><button class="active"  onclick="switchView('daily',   this)">Daily</button></li>
+      <li><button                 onclick="switchView('weekly',  this)">Weekly</button></li>
+      <li><button                 onclick="switchView('monthly', this)">Monthly</button></li>
+      <li><button                 onclick="switchView('habits',  this)">Habits</button></li>
+    </ul>
+
+    <div class="nav-right">
+      <div class="date-badge" id="navDate"></div>
+      <button class="btn-primary" onclick="openModal()">+ Add Task</button>
+    </div>
+  </nav>
+
+  <!-- ===== MAIN APP ===== -->
+  <div class="app">
+
+    <!-- ========== DAILY VIEW ========== -->
+    <div class="view active" id="view-daily">
+
+      <!-- Motivational Quote -->
+      <div class="quote-card" id="quoteCard">
+        <div class="quote-text"  id="quoteText">"The secret of getting ahead is getting started."</div>
+        <div class="quote-author" id="quoteAuthor">— Mark Twain</div>
+      </div>
+
+      <div class="daily-grid">
+
+        <!-- Timeline -->
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <div class="section-title"><span class="dot"></span> Today's Schedule</div>
+            <div class="date-nav">
+              <button onclick="changeDay(-1)">‹</button>
+              <span class="current-date" id="currentDayLabel"></span>
+              <button onclick="changeDay(1)">›</button>
+            </div>
+          </div>
+          <div class="timeline" id="timeline"></div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-col">
+
+          <!-- Mini Calendar -->
+          <div class="mini-cal">
+            <div class="cal-header">
+              <h3 id="miniCalTitle"></h3>
+              <div>
+                <button onclick="changeMonth(-1)">‹</button>
+                <button onclick="changeMonth(1)">›</button>
+              </div>
+            </div>
+            <div class="cal-days-header">
+              <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+            </div>
+            <div class="cal-grid" id="miniCalGrid"></div>
+          </div>
+
+          <!-- Progress Ring -->
+          <div class="mini-cal" style="text-align:center">
+            <div class="section-title" style="justify-content:center">
+              <span class="dot"></span> Today's Progress
+            </div>
+            <div class="progress-ring-wrap">
+              <svg class="progress-ring" width="110" height="110">
+                <circle class="ring-bg"   cx="55" cy="55" r="44" stroke-width="8"/>
+                <circle class="ring-fill" cx="55" cy="55" r="44" stroke-width="8"
+                  id="ringFill"
+                  stroke="url(#ringGrad)"
+                  stroke-dasharray="276.5"
+                  stroke-dashoffset="276.5"/>
+                <defs>
+                  <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%"   style="stop-color:var(--coral)"/>
+                    <stop offset="100%" style="stop-color:var(--indigo)"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <div id="progressPct"   style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;margin-top:-10px">0%</div>
+            <div id="progressLabel" style="font-size:0.8rem;color:var(--muted);margin-top:4px">0 of 0 tasks done</div>
+          </div>
+
+          <!-- Top Priorities -->
+          <div class="priorities-card">
+            <div class="section-title"><span class="dot"></span> Top Priorities</div>
+            <div id="priorityList">
+              <div class="priority-item">
+                <div class="priority-badge" style="background:var(--coral)"></div>
+                <div class="priority-text">Review project proposal</div>
+                <div class="priority-tag">Work</div>
+              </div>
+              <div class="priority-item">
+                <div class="priority-badge" style="background:var(--mint)"></div>
+                <div class="priority-text">30 min morning run</div>
+                <div class="priority-tag">Health</div>
+              </div>
+              <div class="priority-item">
+                <div class="priority-badge" style="background:var(--indigo)"></div>
+                <div class="priority-text">Call with team at 3PM</div>
+                <div class="priority-tag">Meeting</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mood Tracker -->
+          <div class="mood-card">
+            <div class="section-title"><span class="dot"></span> Today's Mood</div>
+            <div class="mood-row" id="moodRow">
+              <div class="mood-btn" onclick="setMood(this)">😴<span class="mood-label">Tired</span></div>
+              <div class="mood-btn" onclick="setMood(this)">😐<span class="mood-label">Meh</span></div>
+              <div class="mood-btn" onclick="setMood(this)">🙂<span class="mood-label">Good</span></div>
+              <div class="mood-btn" onclick="setMood(this)">😄<span class="mood-label">Great</span></div>
+              <div class="mood-btn" onclick="setMood(this)">🔥<span class="mood-label">Amazing</span></div>
+            </div>
+          </div>
+
+        </div><!-- /right-col -->
+      </div><!-- /daily-grid -->
+    </div><!-- /view-daily -->
+
+    <!-- ========== WEEKLY VIEW ========== -->
+    <div class="view" id="view-weekly">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+        <div class="section-title"><span class="dot"></span> Weekly Overview</div>
+        <div class="date-nav">
+          <button onclick="changeWeek(-1)">‹ Prev</button>
+          <span class="current-date" id="weekLabel" style="font-size:0.95rem"></span>
+          <button onclick="changeWeek(1)">Next ›</button>
+        </div>
+      </div>
+
+      <div class="weekly-grid-container">
+        <div class="weekly-header-row" id="weekHeaderRow">
+          <div></div>
+        </div>
+        <div class="weekly-body" id="weeklyBody">
+          <div class="week-time-col" id="weekTimeCol"></div>
+        </div>
+      </div>
+    </div><!-- /view-weekly -->
+
+    <!-- ========== MONTHLY VIEW ========== -->
+    <div class="view" id="view-monthly">
+      <div class="monthly-header">
+        <h2 id="monthTitle"></h2>
+        <div class="month-nav">
+          <button onclick="changeMonthView(-1)">‹ Prev</button>
+          <button onclick="changeMonthView(1)">Next ›</button>
+        </div>
+      </div>
+
+      <div class="monthly-cal">
+        <div class="monthly-days-header">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+        <div class="monthly-grid" id="monthlyGrid"></div>
+      </div>
+    </div><!-- /view-monthly -->
+
+    <!-- ========== HABITS VIEW ========== -->
+    <div class="view" id="view-habits">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+        <div class="section-title"><span class="dot"></span> Habit Tracker</div>
+        <button class="btn-primary" onclick="addHabit()">+ Add Habit</button>
+      </div>
+      <div class="stats-row"  id="habitStats"></div>
+      <div class="habits-grid" id="habitsGrid"></div>
+    </div><!-- /view-habits -->
+
+  </div><!-- /app -->
+
+  <!-- ===== FLOATING ACTION BUTTON ===== -->
+  <button class="fab" onclick="openModal()" title="Quick add task">+</button>
+
+  <!-- ===== ADD TASK MODAL ===== -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+    <div class="modal">
+      <h3>✦ New Task</h3>
+
+      <div class="form-group">
+        <label>Task Title</label>
+        <input type="text" id="taskTitle" placeholder="What do you need to do?" />
+      </div>
+      <div class="form-group">
+        <label>Time</label>
+        <input type="time" id="taskTime" value="09:00" />
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="taskDate" />
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="taskCat">
+          <option value="Work">Work</option>
+          <option value="Health">Health</option>
+          <option value="Personal">Personal</option>
+          <option value="Meeting">Meeting</option>
+          <option value="Learning">Learning</option>
+          <option value="Social">Social</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Color</label>
+        <div class="color-picker">
+          <div class="color-dot selected" style="background:var(--coral)"  data-color="coral"  onclick="selectColor(this)"></div>
+          <div class="color-dot"          style="background:var(--indigo)" data-color="indigo" onclick="selectColor(this)"></div>
+          <div class="color-dot"          style="background:var(--mint)"   data-color="mint"   onclick="selectColor(this)"></div>
+          <div class="color-dot"          style="background:var(--amber)"  data-color="amber"  onclick="selectColor(this)"></div>
+          <div class="color-dot"          style="background:var(--rose)"   data-color="rose"   onclick="selectColor(this)"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="taskNotes" placeholder="Any additional notes..."></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-save"   onclick="saveTask()">Save Task ✦</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div class="toast" id="toast"></div>
+
+  <!-- JavaScript -->
+  <script src="js/app.js"></script>
+</body>
+</html>
